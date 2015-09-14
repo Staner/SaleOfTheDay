@@ -9,9 +9,16 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.parse.Parse;
+
 import java.util.ArrayList;
 
 public class MainActivity extends Activity {
+
+
+    // Enable Local Datastore.
+
+
 
     String[] data = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};
     String d = "d";
@@ -28,6 +35,12 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Parse.enableLocalDatastore(this);
+
+        Parse.initialize(this, "eOBp2JZ5GHRCXHJ9A91Y7wYNE6Iimjv61WQNprdM", "FcgiYI8pGWlEtUFCusXWDpbosDjCmWTdhHffjdUz");
+
+
 
         ArrayList<String> strings = new ArrayList<>();
 
