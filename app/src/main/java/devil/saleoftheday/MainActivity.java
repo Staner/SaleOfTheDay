@@ -78,6 +78,8 @@ public class MainActivity extends Activity {
                                     //  Log.d("centers", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size()+"");
                                     Log.d("selected name:", selectedCity.getName());
                                     // Log.d("city center:", selectedCity.getShopCenters().get(0).getName());
+
+                                    city.setText(WelcomeActivity.PARSE_DATA.getData().get(which).getName());
                                 }
 
                                 else center.setEnabled(false);
@@ -112,7 +114,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-
+                                center.setText(selectedCity.getShopCenters().get(which).getName());
 
                                 if ( selectedCity.getShopCenters().get(which).getFloors().equals("1")){
 
