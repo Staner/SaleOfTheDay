@@ -7,12 +7,12 @@ import java.util.ArrayList;
  */
 public class City {
 
-    int _id;
+    String _id;
     String name;
     Coordinates coordinates;
     ArrayList<ShopCenter> shopCenters;
 
-    public City(int _id, String name, Coordinates coordinates) {
+    public City(String _id, String name, Coordinates coordinates) {
         this._id = _id;
         this.name = name;
         this.coordinates = coordinates;
@@ -28,11 +28,11 @@ public class City {
         this.coordinates = coordinates;
     }
 
-    public int get_id() {
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
@@ -58,5 +58,12 @@ public class City {
 
     public void setShopCenters(ArrayList<ShopCenter> shopCenters) {
         this.shopCenters = shopCenters;
+    }
+
+    public void addShopCenter(ShopCenter shopCenter) {
+
+        shopCenters.add(shopCenter);
+
+
     }
 }

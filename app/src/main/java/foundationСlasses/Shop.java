@@ -5,34 +5,58 @@ package foundationСlasses;
  */
 public class Shop {
 
-    int _id;
+    String _id;
+    String cityId;
     String shopCenterId;
     String name;
+    String floor;
 
-    public Shop(int _id, String shopCenterId, String name) {
+
+    public Shop(String _id,String cityId, String shopCenterId, String name, String floor) {
         this._id = _id;
+        this.cityId = cityId;
+        this.shopCenterId = shopCenterId;
+        this.name = name;
+        this.floor = floor;
+    }
+    public Shop(String cityId, String shopCenterId, String name, String floor) {
+
+        this.floor = floor;
+        this.cityId = cityId;
         this.shopCenterId = shopCenterId;
         this.name = name;
     }
-    public Shop( String shopCenterId, String name) {
 
-        this.shopCenterId = shopCenterId;
-        this.name = name;
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFloor() {
+        return floor;
     }
 
-    public int get_id() {
+    public void setFloor(String floor) {
+        this.floor = floor;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+
+    }
+
+    public String get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(String _id) {
         this._id = _id;
     }
 
@@ -43,4 +67,6 @@ public class Shop {
     public void setShopCenterId(String shopCenterId) {
         this.shopCenterId = shopCenterId;
     }
+
+
 }

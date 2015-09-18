@@ -4,11 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.SaveCallback;
-
-import foundationСlasses.Shop;
 
 
 // here you can create and push to Parse city or shop center or shop
@@ -47,9 +42,9 @@ public class CreateActivity extends AppCompatActivity {
 
 
 
-     /*   // create shop center
+      /*  // create shop center
 
-        ShopCenter shopCenter = new ShopCenter("TUNYw94TcM", "וואן פלאזה", new Coordinates(31.245505,31.248313,34.810872,34.813362));
+        ShopCenter shopCenter = new ShopCenter("TUNYw94TcM", "וואן פלאזה", new Coordinates(31.245505,31.248313,34.810872,34.813362),"1");
 
         ParseObject createShopCenter = new ParseObject("ShopCenter");
         createShopCenter.put("name", shopCenter.getName());
@@ -66,18 +61,19 @@ public class CreateActivity extends AppCompatActivity {
             }
 
 
-        });*/
+        });
+*/
 
 
-
-
+/*
         // create shop
 
-        Shop shop = new Shop("csSgQwxw3G", "Black");
+        Shop shop = new Shop("TUNYw94TcM","UWl0xm702O", "H&M", "1");
 
         ParseObject createShop = new ParseObject("Shop");
         createShop.put("name", shop.getName());
-        createShop.put("ShopCenterId", shop.getShopCenterId());
+        createShop.put("cityId", shop.getCityId());
+        createShop.put("shopCenterId", shop.getShopCenterId());
 
 
         createShop.saveEventually(new SaveCallback() {
@@ -87,6 +83,6 @@ public class CreateActivity extends AppCompatActivity {
             }
 
 
-        });
+        });*/
     }
 }

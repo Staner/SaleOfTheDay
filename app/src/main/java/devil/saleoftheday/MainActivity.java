@@ -1,33 +1,28 @@
 package devil.saleoftheday;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ContextMenu;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
-import android.widget.Toast;
 
-import com.parse.Parse;
-
-import java.util.ArrayList;
+import foundationСlasses.City;
+import foundationСlasses.Shop;
+import foundationСlasses.ShopCenter;
 
 public class MainActivity extends Activity {
 
 
-    // Enable Local Datastore.
+    Button city, center, floor;
+
+    City selectedCity;
+    ShopCenter selectedShopCenter;
 
 
 
-    String[] data = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};
-    String d = "d";
-
-
-
-    GridView gvMain;
-    Button city, center;
-    //ArrayAdapter<String> adapter;
 
 
     /** Called when the activity is first created. */
@@ -36,63 +31,146 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Parse.enableLocalDatastore(this);
 
-        Parse.initialize(this, "eOBp2JZ5GHRCXHJ9A91Y7wYNE6Iimjv61WQNprdM", "FcgiYI8pGWlEtUFCusXWDpbosDjCmWTdhHffjdUz");
+        Log.d("parse size", WelcomeActivity.PARSE_DATA.getData().size() + "");
 
-
-
-        ArrayList<String> strings = new ArrayList<>();
-
-        int misparOtiiot = data.length;
+        city = (Button) findViewById(R.id.btncity);
+        center = (Button) findViewById(R.id.btncenter);
+        floor = (Button) findViewById(R.id.btnfloor);
 
 
+        city.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        city = (Button) findViewById(R.id.city);
-        center = (Button) findViewById(R.id.center);
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+                        MainActivity.this);
 
-        // ��� tvColor � tvSize ���������� ��������� ����������� ����
-        registerForContextMenu(city);
-        registerForContextMenu(center);
+                builderSingle.setTitle("נא לבחור עיר:");
+                final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(
+                        MainActivity.this,
+                        android.R.layout.select_dialog_singlechoice);
+                for (City city: WelcomeActivity.PARSE_DATA.getData()){
+                    cityArrayAdapter.add(city.getName());
+                }
 
-        //adapter = new ArrayAdapter<String>(this, R.layout.item, R.id.tvText, data);
-        gvMain = (GridView) findViewById(R.id.gridView);
-        gvMain.setAdapter(new GridViewAdapter(this));
-        adjustGridView();
+                builderSingle.setAdapter(cityArrayAdapter,
+                        new DialogInterface.OnClickListener() {
 
-        gvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(MainActivity.this, "" + position,
-                        Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                center.setEnabled(true);
+
+
+                                Log.d("name", WelcomeActivity.PARSE_DATA.getData().get(which).getName());
+                                Log.d("shop center size ", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size() + "");
+
+                                if (WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size() > 0) {
+
+                                    center.setEnabled(true);
+
+
+                                    selectedCity = new City(
+                                            WelcomeActivity.PARSE_DATA.getData().get(which).get_id(),
+                                            WelcomeActivity.PARSE_DATA.getData().get(which).getName(),
+                                            WelcomeActivity.PARSE_DATA.getData().get(which).getCoordinates());
+                                    selectedCity.setShopCenters(WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters());
+                                    //  Log.d("centers", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size()+"");
+                                    Log.d("selected name:", selectedCity.getName());
+                                    // Log.d("city center:", selectedCity.getShopCenters().get(0).getName());
+                                }
+
+                                else center.setEnabled(false);
+
+                            }
+                        });
+                builderSingle.show();
+
+
             }
         });
+
+
+        center.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+                        MainActivity.this);
+
+                builderSingle.setTitle("נא לבחור מרכז קניות");
+                final ArrayAdapter<String> shopCenterArrayAdapter = new ArrayAdapter<String>(
+                        MainActivity.this,
+                        android.R.layout.select_dialog_singlechoice);
+                for (ShopCenter shopCenter : selectedCity.getShopCenters()) {
+                    shopCenterArrayAdapter.add(shopCenter.getName());
+                }
+
+                builderSingle.setAdapter(shopCenterArrayAdapter,
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+
+                                if ( selectedCity.getShopCenters().get(which).getFloors().equals("1")){
+
+                                    floor.setEnabled(false);
+                                }
+
+                                else   floor.setEnabled(true);
+                                selectedShopCenter = new ShopCenter(
+                                        selectedCity.getShopCenters().get(which).get_id(),
+                                        selectedCity.getShopCenters().get(which).getCityId(),
+                                        selectedCity.getShopCenters().get(which).getName(),
+                                        selectedCity.getShopCenters().get(which).getCoordinates(),
+                                        selectedCity.getShopCenters().get(which).getFloors());
+
+
+
+
+                            }
+                        });
+                builderSingle.show();
+
+
+            }
+        });
+
+        floor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+                        MainActivity.this);
+
+                builderSingle.setTitle("shops:");
+                final ArrayAdapter<String> shopsArrayAdapter = new ArrayAdapter<String>(
+                        MainActivity.this,
+                        android.R.layout.select_dialog_singlechoice);
+                for (Shop shop : selectedShopCenter.getShops()) {
+                    shopsArrayAdapter.add(shop.getName());
+                }
+
+                builderSingle.setAdapter(shopsArrayAdapter,
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builderSingle.show();
+
+
+            }
+        });
+
+
+
+
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        // TODO Auto-generated method stub
-        switch (v.getId()) {
-            case R.id.city:
 
-                break;
-            case R.id.center:
-
-                break;
-        }
-    }
-
-
-
-
-   private void adjustGridView() {
-        gvMain.setNumColumns(10);
-
-     /*  gvMain.setNumColumns(GridView.AUTO_FIT);
-        gvMain.setColumnWidth(80);
-        gvMain.setVerticalSpacing(5);
-        gvMain.setHorizontalSpacing(5);
-        gvMain.setStretchMode(GridView.NO_STRETCH);*/
-    }
 }
