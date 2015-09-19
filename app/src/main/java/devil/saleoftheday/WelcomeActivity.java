@@ -116,7 +116,7 @@ public class WelcomeActivity extends AppCompatActivity {
                             Log.d("city:", PARSE_DATA.getData().size() + "");
                             for (ParseObject parseObject : parseObjects) {
 
-                                Log.d("parseObjects ccenter:", parseObjects.size()+" shopCenters");
+                                Log.d("parseObjects center:", parseObjects.size()+" shopCenters");
 
                                 ShopCenter shopCenter = new ShopCenter(
                                         parseObject.getObjectId(),
