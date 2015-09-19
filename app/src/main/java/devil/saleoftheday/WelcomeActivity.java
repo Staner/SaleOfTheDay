@@ -62,7 +62,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     }
                 });
             }
-        }, 5000);
+        }, 1000);
     }
 
     private void addNewView() {
