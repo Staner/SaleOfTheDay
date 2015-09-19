@@ -17,6 +17,7 @@ import java.util.TimerTask;
 
 import foundationСlasses.City;
 import foundationСlasses.Coordinates;
+import foundationСlasses.Floor;
 import foundationСlasses.ParseData;
 import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
@@ -75,6 +76,9 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
 
+
+
+
         ParseQuery<ParseObject> CityQuery = new ParseQuery<ParseObject>("City");
 
         CityQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -96,100 +100,155 @@ public class WelcomeActivity extends AppCompatActivity {
 
 
                     }
+                  nextloadShopCenters();
                 }
             }
 
-        });
+            private void nextloadShopCenters() {
+
+                ParseQuery<ParseObject> ShopCenterQuery = new ParseQuery<ParseObject>("ShopCenter");
+
+                ShopCenterQuery.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> parseObjects, ParseException e) {
+                        if (e == null && parseObjects != null) {
+
+                            Log.d("city:", PARSE_DATA.getData().size() + "");
+                            for (ParseObject parseObject : parseObjects) {
+
+                                Log.d("parseObjects center:", parseObjects.size()+" shopCenters");
+
+                                ShopCenter shopCenter = new ShopCenter(
+                                        parseObject.getObjectId(),
+                                        parseObject.getString("cityId"),
+                                        parseObject.getString("name"),
+                                        new Coordinates(
+                                                parseObject.getDouble("latMin"),
+                                                parseObject.getDouble("latMax"),
+                                                parseObject.getDouble("lonMin"),
+                                                parseObject.getDouble("lonMax")));
 
 
-        ParseQuery<ParseObject> ShopCenterQuery = new ParseQuery<ParseObject>("ShopCenter");
+                                        for(City city: PARSE_DATA.getData()){
 
-        ShopCenterQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null && parseObjects != null) {
-                    for (ParseObject parseObject : parseObjects) {
+                                                if (city.get_id().equals(shopCenter.getCityId())) {
+                                                    city.addShopCenter(shopCenter);
+                                                    Log.d("city add center:", "city add center++");
+                                                }
+                                        }
 
-                        Log.d("parseObjects:", parseObjects.size()+" shopCenters");
 
-                        ShopCenter shopCenter = new ShopCenter(
-                                parseObject.getObjectId(),
-                                parseObject.getString("cityId"),
-                                parseObject.getString("name"),
-                                new Coordinates(
-                                        parseObject.getDouble("latMin"),
-                                        parseObject.getDouble("latMax"),
-                                        parseObject.getDouble("lonMin"),
-                                        parseObject.getDouble("lonMax")),
-                                        parseObject.getString("floors"));
 
-                        Log.d("parse_DATA:", PARSE_DATA.getData().size()+"");
-                        for(City city: PARSE_DATA.getData()){
+                            }
 
-                            Log.d("city.get_id():", city.get_id());
-                            Log.d("(shopCenter.getCityId", shopCenter.getCityId()+"");
-
-                            if (city.get_id().equals(shopCenter.getCityId()))
-                                city.addShopCenter(shopCenter);
-                            Log.d("shopCenters:", "shopCenter++");
+nextloadFloors();
                         }
+                    }
+
+                    private void nextloadFloors() {
+
+                        ParseQuery<ParseObject> FloorShopCenterQuery = new ParseQuery<ParseObject>("Floor");
+
+                        FloorShopCenterQuery.findInBackground(new FindCallback<ParseObject>() {
+                            @Override
+                            public void done(List<ParseObject> parseObjects, ParseException e) {
+                                if (e == null && parseObjects != null) {
+                                    for (ParseObject parseObject : parseObjects) {
+
+                                        Log.d("parseObjects floor:", parseObjects.size()+" floors");
+
+                                        Floor floor = new Floor(
+                                                parseObject.getObjectId(),
+                                                parseObject.getString("name"),
+                                                parseObject.getString("cityId"),
+                                                parseObject.getString("shopCenterId")
+                                        );
+
+
+                                        for(City city: PARSE_DATA.getData()){
+
+                                            Log.d("city.get_id():", city.get_id());
+                                            for (ShopCenter shopCenter: city.getShopCenters())
+
+                                                if (shopCenter.get_id().equals(floor.getShopCenterId())) {
+                                                    shopCenter.addFloor(floor);
+                                                    Log.d("floor:", "floor++");
+                                                }
+                                        }
+
+
+                                    }
+                           nextloadShops();
+
+                                }
+                            }
+
+                            private void nextloadShops() {
+
+                                ParseQuery<ParseObject> ShopQuery = new ParseQuery<ParseObject>("Shop");
+
+                                ShopQuery.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> parseObjects, ParseException e) {
+                                        if (e == null && parseObjects != null) {
+                                            for (ParseObject parseObject : parseObjects) {
+
+                                                Log.d("parseObjects shop:", parseObjects.size() + " shops");
+
+                                                Shop shop = new Shop(
+                                                        parseObject.getObjectId(),
+                                                        parseObject.getString("cityId"),
+                                                        parseObject.getString("shopCenterId"),
+                                                        parseObject.getString("floorId"),
+                                                        parseObject.getString("name"));
+
+
+                                                for (City city : PARSE_DATA.getData()) {
+                                                    if (city.get_id().equals(shop.getCityId())) {
+                                                        for (ShopCenter shopCenter : city.getShopCenters()) {
+                                                            if (shopCenter.get_id().equals(shop.getShopCenterId())) {
+                                                                for (Floor floor : shopCenter.getFloors()) {
+                                                                    Log.d("floor:", floor.get_id());
+                                                                    Log.d("shop floor id:", shop.getFloorId());
+
+                                                                    if (floor.get_id().equals(shop.getFloorId())) {
+                                                                        floor.addShop(shop);
+                                                                        Log.d("shop:", "shop++");
+
+
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+
+
+                                            }
+                                        }
+                                    }
+
+                                });
+
+
+                            }
+
+                        });
 
 
                     }
 
+                });
 
-                }
+
+
+
+
             }
 
-        });
-
-
-        ParseQuery<ParseObject> ShopQuery = new ParseQuery<ParseObject>("Shop");
-
-        ShopQuery.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> parseObjects, ParseException e) {
-                if (e == null && parseObjects != null) {
-                    for (ParseObject parseObject : parseObjects) {
-
-                        Log.d("parseObjects:", parseObjects.size()+" shops");
-
-                        Shop shop = new Shop(
-                                parseObject.getObjectId(),
-                                parseObject.getString("cityId"),
-                                parseObject.getString("shopCenterId"),
-                                parseObject.getString("name"),
-                                parseObject.getString("floor"));
-
-
-                        for(City city: PARSE_DATA.getData()){
-
-                            if (city.get_id().equals(shop.getCityId())){
-
-                               for (ShopCenter shopCenter: city.getShopCenters()){
-
-                                   if (shopCenter.get_id().equals(shop.getShopCenterId()))
-                                       Log.d("shopCenters:", "shop++");
-                                       shopCenter.addShop(shop);
-
-                               }
-
-
-
-
-                        }
-
-                    }
-
-
-
-
-                    }
-                }
-            }
 
         });
-
 
 
     }

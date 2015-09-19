@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.TextView;
 
 import foundationСlasses.City;
+import foundationСlasses.Floor;
 import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
 
@@ -20,6 +22,7 @@ public class MainActivity extends Activity {
 
     City selectedCity;
     ShopCenter selectedShopCenter;
+    Floor selectedFloor;
 
 
 
@@ -31,7 +34,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Log.d("shopCenetr:", WelcomeActivity.PARSE_DATA.getData().get(0).getShopCenters().size() + "");
+        Log.d("shopCenetr:", WelcomeActivity.PARSE_DATA.getData().get(1).getShopCenters().size() + "");
         Log.d("parse size", WelcomeActivity.PARSE_DATA.getData().size() + "");
 
         city = (Button) findViewById(R.id.btncity);
@@ -77,10 +81,13 @@ public class MainActivity extends Activity {
                                     selectedCity.setShopCenters(WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters());
                                     //  Log.d("centers", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size()+"");
                                     Log.d("selected name:", selectedCity.getName());
-                                    // Log.d("city center:", selectedCity.getShopCenters().get(0).getName());
+                                    Log.d("city center:", selectedCity.getShopCenters().size()+"");
                                 }
 
-                                else center.setEnabled(false);
+                                else{
+                                    center.setEnabled(false);
+                                    floor.setEnabled(false);
+                                }
 
                             }
                         });
@@ -114,9 +121,15 @@ public class MainActivity extends Activity {
 
 
 
-                                if ( selectedCity.getShopCenters().get(which).getFloors().equals("1")){
+                                if ( selectedCity.getShopCenters().get(which).getFloors().size() < 1){
 
                                     floor.setEnabled(false);
+                                    selectedShopCenter = new ShopCenter(
+                                            selectedCity.getShopCenters().get(which).get_id(),
+                                            selectedCity.getShopCenters().get(which).getCityId(),
+                                            selectedCity.getShopCenters().get(which).getName(),
+                                            selectedCity.getShopCenters().get(which).getCoordinates());
+                                    selectedShopCenter.setFloors(selectedCity.getShopCenters().get(which).getFloors());
                                 }
 
                                 else   floor.setEnabled(true);
@@ -124,8 +137,8 @@ public class MainActivity extends Activity {
                                         selectedCity.getShopCenters().get(which).get_id(),
                                         selectedCity.getShopCenters().get(which).getCityId(),
                                         selectedCity.getShopCenters().get(which).getName(),
-                                        selectedCity.getShopCenters().get(which).getCoordinates(),
-                                        selectedCity.getShopCenters().get(which).getFloors());
+                                        selectedCity.getShopCenters().get(which).getCoordinates());
+                                selectedShopCenter.setFloors(selectedCity.getShopCenters().get(which).getFloors());
 
 
 
@@ -145,19 +158,34 @@ public class MainActivity extends Activity {
                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(
                         MainActivity.this);
 
-                builderSingle.setTitle("shops:");
-                final ArrayAdapter<String> shopsArrayAdapter = new ArrayAdapter<String>(
+                builderSingle.setTitle("floors:");
+                final ArrayAdapter<String> floorsArrayAdapter = new ArrayAdapter<String>(
                         MainActivity.this,
                         android.R.layout.select_dialog_singlechoice);
-                for (Shop shop : selectedShopCenter.getShops()) {
-                    shopsArrayAdapter.add(shop.getName());
+                for (Floor floor : selectedShopCenter.getFloors()) {
+                    floorsArrayAdapter.add(floor.getName());
                 }
 
-                builderSingle.setAdapter(shopsArrayAdapter,
+                builderSingle.setAdapter(floorsArrayAdapter,
                         new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
+                                selectedFloor = new Floor(
+                                        selectedShopCenter.getFloors().get(which).get_id(),
+                                        selectedShopCenter.getFloors().get(which).getName(),
+                                        selectedShopCenter.getFloors().get(which).getCityId(),
+                                        selectedShopCenter.getFloors().get(which).getShopCenterId());
+                                selectedFloor.setShops(selectedShopCenter.getFloors().get(which).getShops());
+
+                                TextView textView = (TextView) findViewById(R.id.textView);
+                                String shops = "";
+                                for (Shop shop: selectedFloor.getShops()){
+                                   shops = shops + shop.getName();
+                                }
+                                textView.setText(shops);
+
 
                             }
                         });

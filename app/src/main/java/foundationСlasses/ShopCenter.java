@@ -11,32 +11,30 @@ public class ShopCenter {
     String cityId;
     String name;
     Coordinates coordinates;
-    String floors;
-    ArrayList<Shop> shops;
+    ArrayList<Floor> floors;
 
-    public ShopCenter( String cityId, String name, Coordinates coordinates, String floors) {
-        this.floors = floors;
+    public ShopCenter( String cityId, String name, Coordinates coordinates) {
+
         this.cityId = cityId;
         this.name = name;
         this.coordinates = coordinates;
 
     }
 
-    public ShopCenter( String _id, String cityId, String name, Coordinates coordinates, String floors) {
+    public ShopCenter( String _id, String cityId, String name, Coordinates coordinates) {
 
         this._id = _id;
         this.cityId = cityId;
         this.name = name;
         this.coordinates = coordinates;
-        this.floors = floors;
-        shops = new ArrayList<Shop>();
+        floors = new ArrayList<Floor>();
     }
 
-    public String getFloors() {
+    public ArrayList<Floor> getFloors() {
         return floors;
     }
 
-    public void setFloors(String floors) {
+    public void setFloors(ArrayList<Floor> floors) {
         this.floors = floors;
     }
 
@@ -73,19 +71,12 @@ public class ShopCenter {
         this.coordinates = coordinates;
     }
 
-    public ArrayList<Shop> getShops() {
-        return shops;
-    }
 
-    public void setShops(ArrayList<Shop> shops) {
-        this.shops = shops;
-    }
+    public void addFloor(Floor floor) {
 
-
-    public void addShop(Shop shop) {
-
-        shops.add(shop);
-
+        floors.add(floor);
 
     }
+
+
 }

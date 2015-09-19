@@ -18,6 +18,7 @@
             android:name=".CreateActivity"
             android:label="@string/title_activity_create" >
 
+
         </activity>
         <activity
             android:name=".WelcomeActivity"
@@ -28,6 +29,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

@@ -8,22 +8,25 @@ public class Shop {
     String _id;
     String cityId;
     String shopCenterId;
+    String floorId;
     String name;
-    String floor;
 
 
-    public Shop(String _id,String cityId, String shopCenterId, String name, String floor) {
+
+    public Shop(String _id,String cityId, String shopCenterId, String floorId,  String name) {
         this._id = _id;
         this.cityId = cityId;
         this.shopCenterId = shopCenterId;
+        this.floorId = floorId;
         this.name = name;
-        this.floor = floor;
-    }
-    public Shop(String cityId, String shopCenterId, String name, String floor) {
 
-        this.floor = floor;
+    }
+    public Shop(String cityId, String shopCenterId, String floorId, String name) {
+
+
         this.cityId = cityId;
         this.shopCenterId = shopCenterId;
+        this.floorId = floorId;
         this.name = name;
     }
 
@@ -39,13 +42,6 @@ public class Shop {
         return name;
     }
 
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -68,5 +64,11 @@ public class Shop {
         this.shopCenterId = shopCenterId;
     }
 
+    public String getFloorId() {
+        return floorId;
+    }
 
+    public void setFloorId(String floorId) {
+        this.floorId = floorId;
+    }
 }

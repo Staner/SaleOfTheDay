@@ -4,6 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
+
+import foundationСlasses.Floor;
 
 
 // here you can create and push to Parse city or shop center or shop
@@ -62,7 +67,25 @@ public class CreateActivity extends AppCompatActivity {
 
 
         });
+
 */
+
+
+         // create floor
+        Floor floor = new Floor("2","TUNYw94TcM","UWl0xm702O");
+
+        ParseObject createFloor = new ParseObject("Floor");
+        createFloor.put("name", floor.getName());
+        createFloor.put("cityId", floor.getCityId());
+        createFloor.put("shopCenterId", floor.getShopCenterId());
+
+
+        createFloor.saveEventually(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+
+            }
+        });
 
 
 /*
