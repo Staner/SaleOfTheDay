@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
                                     selectedCity.setShopCenters(WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters());
                                     //  Log.d("centers", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size()+"");
                                     Log.d("selected name:", selectedCity.getName());
-                                    Log.d("city center:", selectedCity.getShopCenters().size()+"");
+                                    Log.d("ccity center:", selectedCity.getShopCenters().size()+"");
                                 }
 
                                 else{
