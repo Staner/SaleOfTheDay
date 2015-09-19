@@ -133,7 +133,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                                                 if (city.get_id().equals(shopCenter.getCityId())) {
                                                     city.addShopCenter(shopCenter);
-                                                    Log.d("city add center:", "city add center++");
+                                                    Log.d("ccity add center:", "city add center++");
                                                 }
                                         }
 
