@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Sergei\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="F:\Saleoftheday\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-3ef3e914e0d37ec0423e05040159d88f90395883.jar" />
+    </item>
+    <item
+        jar="F:\Saleoftheday\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="F:\Saleoftheday\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-b0ee8fd2f3149c4a33dbea544ce81e3f6c3b8af9.jar" />
+    </item>
+    <item
+        jar="C:\Users\Sergei\.gradle\caches\modules-2\files-2.1\com.parse.bolts\bolts-android\1.2.0\6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd\bolts-android-1.2.0.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6ee2953ccf51ce72b6d548c30c4633b99eb4f9dd">
+        <dex dex="F:\Saleoftheday\app\build\intermediates\pre-dexed\debug\bolts-android-1.2.0-e9678b72a9868a6921382bb69784307996022337.jar" />
+    </item>
+    <item
+        jar="F:\Saleoftheday\app\libs\Parse-1.10.1.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="181b435832725bec96c11ff568bdfbccdacab944">
+        <dex dex="F:\Saleoftheday\app\build\intermediates\pre-dexed\debug\Parse-1.10.1-1fae8c090a645f7aa0f6c7f6f028cec598e27025.jar" />
+    </item>
+    <item
+        jar="F:\Saleoftheday\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="F:\Saleoftheday\app\build\intermediates\pre-dexed\debug\classes-ff13dac4a36f2c34f99d0e5873a7091d25af04c5.jar" />
+    </item>
+    <item
+        jar="F:\Saleoftheday\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
+        <dex dex="F:\Saleoftheday\app\build\intermediates\pre-dexed\debug\classes-cac399cdd4c5b9893b4bc3a2184a4943acdc980c.jar" />
+    </item>
+
+</items>
