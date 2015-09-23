@@ -9,11 +9,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import foundationСlasses.City;
 import foundationСlasses.Floor;
-import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
 
 public class MainActivity extends Activity {
@@ -21,9 +19,9 @@ public class MainActivity extends Activity {
 
     Button city, center, floor;
 
-    City selectedCity;
-    ShopCenter selectedShopCenter;
-    Floor selectedFloor;
+    City selectedCity = new City();
+    ShopCenter selectedShopCenter = new ShopCenter();
+    Floor selectedFloor = new Floor();
 
     ImageView iv;
 
@@ -76,12 +74,11 @@ public class MainActivity extends Activity {
 
                                     center.setEnabled(true);
 
-                                    selectedCity = new City(
-                                            WelcomeActivity.PARSE_DATA.getData().get(which).get_id(),
-                                            WelcomeActivity.PARSE_DATA.getData().get(which).getName(),
-                                            WelcomeActivity.PARSE_DATA.getData().get(which).getCoordinates());
+                                    selectedCity.setName(WelcomeActivity.PARSE_DATA.getData().get(which).getName());
+                                    selectedCity.set_id(WelcomeActivity.PARSE_DATA.getData().get(which).get_id());
+                                    selectedCity.setCoordinates(WelcomeActivity.PARSE_DATA.getData().get(which).getCoordinates());
                                     selectedCity.setShopCenters(WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters());
-                                    //  Log.d("centers", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size()+"");
+
                                     Log.d("selected name:", selectedCity.getName());
                                     Log.d("ccity center:", selectedCity.getShopCenters().size()+"");
                                 }
@@ -126,31 +123,30 @@ public class MainActivity extends Activity {
                                 if ( selectedCity.getShopCenters().get(which).getFloors().size() < 1){
 
                                     floor.setEnabled(false);
-                                    selectedShopCenter = new ShopCenter(
-                                            selectedCity.getShopCenters().get(which).get_id(),
-                                            selectedCity.getShopCenters().get(which).getCityId(),
-                                            selectedCity.getShopCenters().get(which).getName(),
-                                            selectedCity.getShopCenters().get(which).getCoordinates(),
-                                            selectedCity.getShopCenters().get(which).getCenterImage());
-                                    selectedShopCenter.setFloors(selectedCity.getShopCenters().get(which).getFloors());
+
+                                    fillSelectedShopCenter(which);
 
                                     iv.setImageBitmap(selectedShopCenter.getCenterImage());
 
                                 }
 
-                                else   floor.setEnabled(true);
-                                selectedShopCenter = new ShopCenter(
-                                        selectedCity.getShopCenters().get(which).get_id(),
-                                        selectedCity.getShopCenters().get(which).getCityId(),
-                                        selectedCity.getShopCenters().get(which).getName(),
-                                        selectedCity.getShopCenters().get(which).getCoordinates(),
-                                        selectedCity.getShopCenters().get(which).getCenterImage());
+                                else {
+                                    floor.setEnabled(true);
+                                    fillSelectedShopCenter(which);
+                                    iv.setImageBitmap(selectedShopCenter.getCenterImage());
+
+                                }
+
+
+                            }
+
+                            private void fillSelectedShopCenter(int which) {
+                                selectedShopCenter.set_id(selectedCity.getShopCenters().get(which).get_id());
+                                selectedShopCenter.setName(selectedCity.getShopCenters().get(which).getName());
+                                selectedShopCenter.setCityId(selectedCity.getShopCenters().get(which).getCityId());
+                                selectedShopCenter.setCoordinates(selectedCity.getShopCenters().get(which).getCoordinates());
+                                selectedShopCenter.setCenterImage(selectedCity.getShopCenters().get(which).getCenterImage());
                                 selectedShopCenter.setFloors(selectedCity.getShopCenters().get(which).getFloors());
-
-                                iv.setImageBitmap(selectedShopCenter.getCenterImage());
-
-
-
 
                             }
                         });
@@ -181,24 +177,17 @@ public class MainActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                selectedFloor = new Floor(
-                                        selectedShopCenter.getFloors().get(which).get_id(),
-                                        selectedShopCenter.getFloors().get(which).getName(),
-                                        selectedShopCenter.getFloors().get(which).getCityId(),
-                                        selectedShopCenter.getFloors().get(which).getShopCenterId(),
-                                        selectedShopCenter.getFloors().get(which).getFloorMapImage());
+
+                                selectedFloor.set_id(selectedShopCenter.getFloors().get(which).get_id());
+                                selectedFloor.setName(selectedShopCenter.getFloors().get(which).getName());
+                                selectedFloor.setCityId(selectedShopCenter.getFloors().get(which).getCityId());
+                                selectedFloor.setShopCenterId(selectedShopCenter.getFloors().get(which).getShopCenterId());
+                                selectedFloor.setFloorMapImage(selectedShopCenter.getFloors().get(which).getFloorMapImage());
                                 selectedFloor.setShops(selectedShopCenter.getFloors().get(which).getShops());
 
                                 iv.setImageBitmap(selectedFloor.getFloorMapImage());
                                 floor.setText(selectedShopCenter.getFloors().get(which).getName());
 
-
-                                TextView textView = (TextView) findViewById(R.id.textView);
-                                String shops = "";
-                                for (Shop shop: selectedFloor.getShops()){
-                                   shops = shops + shop.getName();
-                                }
-                                textView.setText(shops);
 
 
                             }
