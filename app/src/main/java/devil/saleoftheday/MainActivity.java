@@ -1,11 +1,15 @@
 package devil.saleoftheday;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,7 +27,13 @@ public class MainActivity extends Activity {
     ShopCenter selectedShopCenter = new ShopCenter();
     Floor selectedFloor = new Floor();
 
+    private LocationManager locationManager;
+
     ImageView iv;
+
+
+    ViewGroup vg;
+
 
 
 
@@ -32,6 +42,14 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        vg = (ViewGroup) findViewById(R.id.mainLayout);
+
+
+
+
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         Log.d("shopCenetr:", WelcomeActivity.PARSE_DATA.getData().get(0).getShopCenters().size() + "");
         Log.d("shopCenetr:", WelcomeActivity.PARSE_DATA.getData().get(1).getShopCenters().size() + "");
@@ -55,7 +73,7 @@ public class MainActivity extends Activity {
                 final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(
                         MainActivity.this,
                         android.R.layout.select_dialog_singlechoice);
-                for (City city: WelcomeActivity.PARSE_DATA.getData()){
+                for (City city : WelcomeActivity.PARSE_DATA.getData()) {
                     cityArrayAdapter.add(city.getName());
                 }
 
@@ -64,7 +82,7 @@ public class MainActivity extends Activity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                center.setEnabled(true);
+
                                 city.setText(WelcomeActivity.PARSE_DATA.getData().get(which).getName());
 
                                 Log.d("name", WelcomeActivity.PARSE_DATA.getData().get(which).getName());
@@ -80,10 +98,8 @@ public class MainActivity extends Activity {
                                     selectedCity.setShopCenters(WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters());
 
                                     Log.d("selected name:", selectedCity.getName());
-                                    Log.d("ccity center:", selectedCity.getShopCenters().size()+"");
-                                }
-
-                                else{
+                                    Log.d("ccity center:", selectedCity.getShopCenters().size() + "");
+                                } else {
                                     center.setEnabled(false);
                                     floor.setEnabled(false);
                                 }
@@ -120,7 +136,7 @@ public class MainActivity extends Activity {
 
                                 center.setText(selectedCity.getShopCenters().get(which).getName());
 
-                                if ( selectedCity.getShopCenters().get(which).getFloors().size() < 1){
+                                if (selectedCity.getShopCenters().get(which).getFloors().size() < 1) {
 
                                     floor.setEnabled(false);
 
@@ -128,9 +144,7 @@ public class MainActivity extends Activity {
 
                                     iv.setImageBitmap(selectedShopCenter.getCenterImage());
 
-                                }
-
-                                else {
+                                } else {
                                     floor.setEnabled(true);
                                     fillSelectedShopCenter(which);
                                     iv.setImageBitmap(selectedShopCenter.getCenterImage());
@@ -189,7 +203,6 @@ public class MainActivity extends Activity {
                                 floor.setText(selectedShopCenter.getFloors().get(which).getName());
 
 
-
                             }
                         });
                 builderSingle.show();
@@ -199,9 +212,99 @@ public class MainActivity extends Activity {
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000 * 10, 5, locationListener);
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 1000 * 10, 5,
+                locationListener);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(locationListener);
+    }
+
+    private LocationListener locationListener = new LocationListener() {
+
+        @Override
+        public void onLocationChanged(Location location) {
+
+            checkLocation(location);
+            vg.invalidate();
+
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+    };
+
+    private void checkLocation(Location location){
+
+        double latNow = location.getLatitude();
+        double lonNow =  location.getLongitude();
+
+
+        for (City thisCity: WelcomeActivity.PARSE_DATA.getData()){
+
+            if ((thisCity.getCoordinates().getLatMin()<= latNow)&&(latNow<=thisCity.getCoordinates().getLatMax())&&
+                    ((thisCity.getCoordinates().getLonMin()<=lonNow)&&(lonNow<=thisCity.getCoordinates().getLonMax())) ){
+
+                city.setText(thisCity.getName());
+
+                Log.d("name",thisCity.getName());
+                Log.d("shop center size ",thisCity.getShopCenters().size() + "");
+
+                if (thisCity.getShopCenters().size() > 0) {
+
+                    center.setEnabled(true);
+
+                    selectedCity.setName(thisCity.getName());
+                    selectedCity.set_id(thisCity.get_id());
+                    selectedCity.setCoordinates(thisCity.getCoordinates());
+                    selectedCity.setShopCenters(thisCity.getShopCenters());
+
+                    Log.d("selected name:", selectedCity.getName());
+                    Log.d("ccity center:", selectedCity.getShopCenters().size() + "");
+                } else {
+                    center.setEnabled(false);
+                    floor.setEnabled(false);
+                }
+
+
+            }
+
+
+        }
+
+
+
+
 
 
     }
 
 
 }
+

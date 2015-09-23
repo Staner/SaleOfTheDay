@@ -1,7 +1,8 @@
 package devil.saleoftheday;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
 
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -15,7 +16,7 @@ import foundationСlasses.Floor;
 
 // before run, change in AndroidManifest  that this activity be first in application
 
-public class CreateActivity extends AppCompatActivity {
+public class CreateActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

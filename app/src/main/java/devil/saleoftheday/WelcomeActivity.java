@@ -1,10 +1,10 @@
 package devil.saleoftheday;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.parse.FindCallback;
@@ -15,7 +15,6 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +26,7 @@ import foundationСlasses.ParseData;
 import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends Activity {
 
 
     public static ParseData PARSE_DATA;
