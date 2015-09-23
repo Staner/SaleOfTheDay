@@ -2,7 +2,6 @@ package devil.saleoftheday;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
