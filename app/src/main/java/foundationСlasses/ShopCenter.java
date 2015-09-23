@@ -24,6 +24,9 @@ public class ShopCenter {
 
     }
 
+    public ShopCenter() {
+    }
+
     public ShopCenter( String _id, String cityId, String name, Coordinates coordinates,Bitmap centerImage) {
 
         this._id = _id;

@@ -21,6 +21,9 @@ public class City {
     }
 
 
+    public City() {
+    }
+
     // create city constructor
     public City( String name, Coordinates coordinates) {
 

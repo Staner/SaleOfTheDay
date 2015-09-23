@@ -25,6 +25,9 @@ public class Floor  {
         this.floorMapImage = floorMapImage;
     }
 
+    public Floor() {
+    }
+
     public Floor( String name, String cityId, String shopCenterId) {
 
         this.name = name;

@@ -21,6 +21,10 @@ public class Shop {
         this.name = name;
 
     }
+
+    public Shop() {
+    }
+
     public Shop(String cityId, String shopCenterId, String floorId, String name) {
 
 
