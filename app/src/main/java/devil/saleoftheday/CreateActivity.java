@@ -26,7 +26,7 @@ public class CreateActivity extends AppCompatActivity {
 
         Parse.initialize(this, "eOBp2JZ5GHRCXHJ9A91Y7wYNE6Iimjv61WQNprdM", "FcgiYI8pGWlEtUFCusXWDpbosDjCmWTdhHffjdUz");
 
-//test
+//test/klj
        /* // create city
         City city = new City("באר שבע",new Coordinates(31.213764,31.299099,34.742583,34.839550));
 
