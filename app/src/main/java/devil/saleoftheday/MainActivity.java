@@ -2,17 +2,24 @@ package devil.saleoftheday;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import foundationСlasses.City;
+import foundationСlasses.ColorTool;
 import foundationСlasses.Floor;
 import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
@@ -214,6 +221,116 @@ public class MainActivity extends Activity {
 
 
     }
+    private void imageCrosserMethod(){
+
+        iv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent ev) {
+                boolean handledHere = false;
+
+                final int action = ev.getAction();
+
+                final int evX = (int) ev.getX();
+                final int evY = (int) ev.getY();
+                int nextImage = -1;
+
+                ImageView imageView = (ImageView) v.findViewById(R.id.image);
+                if (imageView == null) return false;
+
+                Integer tagNum = (Integer) imageView.getTag();
+
+                //Context context = getApplicationContext();
+                //Drawable drawable = context.getResources().getDrawable(R.drawable.my_image);
+                // convert drawable to bitmap
+                // Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
+                // convert bitmap to drawable
+
+                Drawable d = new BitmapDrawable(selectedFloor.getFloorMapImage());
+
+                int currentResource = (tagNum == null) ? d.getLevel() : tagNum.intValue();
+
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (currentResource == d.getLevel()) {
+                            nextImage = d.getLevel();
+                            handledHere = true;
+                        } else handledHere = true;
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+
+                        int touchColor = getHotspotColor(R.id.image_areas, evX, evY);
+
+                        ColorTool ct = new ColorTool();
+                        int tolerance = 25;
+
+                          /*    selectedShop = new Shop(
+                                selectedFloor.getShops().get(action).get_id(),
+                                selectedFloor.getShops().get(action).getCityId(),
+                                selectedFloor.getShops().get(action).getShopCenterId(),
+                                selectedFloor.getShops().get(action).getFloorId(),
+                                selectedFloor.getShops().get(action).getName(),
+                                selectedFloor.getShops().get(action).getColorTouch());
+
+                        selectedFloor.setShops(selectedShopCenter.getFloors().get(action).getShops());
+                       // selectedShop.setColorTouch(selectedFloor.getShops().get(action).getColorTouch());
+
+                           // selectedFloor.getShops().get(action).getColorTouch();   */
+
+
+                        if (ct.closeMatch(Color.parseColor(selectedFloor.getShops().get(action).getColorTouch()), touchColor, tolerance)) {
+                            //    if (ct.closeMatch(Color.parseColor(selectedFloor.getShops().get(action).getColorTouch()), touchColor, tolerance))
+                            toast(selectedFloor.getShops().get(action).getName());
+                        } else {
+                            toast("try another object");
+                        }
+                        if (currentResource == nextImage) {
+                            nextImage = d.getLevel();
+                        }
+                        handledHere = true;
+                        break;
+
+                    default:
+                        handledHere = false;
+                }
+
+                if (handledHere) {
+
+                    if (nextImage > 0) {
+                        imageView.setImageResource(nextImage);
+                        imageView.setTag(nextImage);
+                    }
+                }
+                return handledHere;
+            }
+        });
+
+
+        toast("אנא בחר איזור");
+
+
+    }
+    public int getHotspotColor (int hotspotId, int x, int y) {
+        ImageView img = (ImageView) findViewById (hotspotId);
+        if (img == null) {
+            Log.d ("ImageAreasActivity", "Hot spot image not found");
+            return 0;
+        } else {
+            img.setDrawingCacheEnabled(true);
+            Bitmap hotspots = Bitmap.createBitmap(img.getDrawingCache());
+            if (hotspots == null) {
+                Log.d ("ImageAreasActivity", "Hot spot bitmap was not created");
+                return 0;
+            } else {
+                img.setDrawingCacheEnabled(false);
+                return hotspots.getPixel(x, y);
+            }
+        }
+    }
+    public void toast (String msg)
+    {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+    } // end toast
 
 
 }
