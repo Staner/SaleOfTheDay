@@ -273,8 +273,8 @@ public class MainActivity extends Activity {
 
                 city.setText(thisCity.getName());
 
-                Log.d("name",thisCity.getName());
-                Log.d("shop center size ",thisCity.getShopCenters().size() + "");
+                Log.d("name", thisCity.getName());
+                Log.d("shop center size ", thisCity.getShopCenters().size() + "");
 
                 if (thisCity.getShopCenters().size() > 0) {
 
@@ -287,10 +287,53 @@ public class MainActivity extends Activity {
 
                     Log.d("selected name:", selectedCity.getName());
                     Log.d("ccity center:", selectedCity.getShopCenters().size() + "");
+
+
+
+
+
+
+
                 } else {
                     center.setEnabled(false);
                     floor.setEnabled(false);
                 }
+
+                for (ShopCenter thisShopCenter: thisCity.getShopCenters()){
+
+                    if ((thisShopCenter.getCoordinates().getLatMin()<= latNow)&&(latNow<=thisShopCenter.getCoordinates().getLatMax())&&
+                            ((thisShopCenter.getCoordinates().getLonMin()<=lonNow)&&(lonNow<=thisShopCenter.getCoordinates().getLonMax())) ){
+
+                        center.setText(thisShopCenter.getName());
+
+                        if (thisShopCenter.getFloors().size() < 1) {
+
+                            floor.setEnabled(false);
+
+                            fillSelectedShopCenter(thisShopCenter);
+
+                            iv.setImageBitmap(selectedShopCenter.getCenterImage());
+
+                        } else {
+                            floor.setEnabled(true);
+                            fillSelectedShopCenter(thisShopCenter);
+                            iv.setImageBitmap(selectedShopCenter.getCenterImage());
+
+                        }
+
+
+                    }
+
+
+
+                    }
+
+
+
+
+                }
+
+
 
 
             }
@@ -298,13 +341,16 @@ public class MainActivity extends Activity {
 
         }
 
-
-
-
-
+    private void fillSelectedShopCenter(ShopCenter thisShopCenter) {
+        selectedShopCenter.set_id(thisShopCenter.get_id());
+        selectedShopCenter.setName(thisShopCenter.getName());
+        selectedShopCenter.setCityId(thisShopCenter.getCityId());
+        selectedShopCenter.setCoordinates(thisShopCenter.getCoordinates());
+        selectedShopCenter.setCenterImage(thisShopCenter.getCenterImage());
+        selectedShopCenter.setFloors(thisShopCenter.getFloors());
 
     }
 
-
+    
 }
 
