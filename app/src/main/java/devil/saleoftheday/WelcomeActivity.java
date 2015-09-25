@@ -1,10 +1,10 @@
 package devil.saleoftheday;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.parse.FindCallback;
@@ -15,7 +15,6 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,13 +26,14 @@ import foundationСlasses.ParseData;
 import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends Activity {
 
 
     public static ParseData PARSE_DATA;
 
     Bitmap centerImage;
     Bitmap floorMapImage;
+    Bitmap floorMaskImage;
 
 
     @Override
@@ -174,42 +174,31 @@ public class WelcomeActivity extends AppCompatActivity {
                                 if (e == null && parseObjects != null) {
                                     for (final ParseObject parseObject : parseObjects) {
 
-                                        ParseFile imageFile = (ParseFile) parseObject.get("floorMapImage");
-                                        imageFile.getDataInBackground(new GetDataCallback() {
-                                            public void done(byte[] data, ParseException e) {
-                                                if (e == null) {
-                                                    // data has the bytes for the image
-                                                    floorMapImage = BitmapFactory.decodeByteArray(data, 0, data.length);
 
-                                                    Log.d("parseObjects floor:", parseObjects.size() + " floors");
+                                                                            Log.d("parseObjects floor:", parseObjects.size() + " floors");
 
-                                                    Floor floor = new Floor(
-                                                            parseObject.getObjectId(),
-                                                            parseObject.getString("name"),
-                                                            parseObject.getString("cityId"),
-                                                            parseObject.getString("shopCenterId"),
-                                                            floorMapImage
-                                                    );
+                                                                            Floor floor = new Floor(
+                                                                                    parseObject.getObjectId(),
+                                                                                    parseObject.getString("name"),
+                                                                                    parseObject.getString("cityId"),
+                                                                                    parseObject.getString("shopCenterId"));
+                                                                   floor.addMapImage(parseObject, floor);
+                                                                   floor.addMaskImage(parseObject, floor);
 
 
-                                                    for (City city : PARSE_DATA.getData()) {
+                                                                            for (City city : PARSE_DATA.getData()) {
 
-                                                        Log.d("city.get_id():", city.get_id());
-                                                        for (ShopCenter shopCenter : city.getShopCenters())
+                                                                                Log.d("city.get_id():", city.get_id());
+                                                                                for (ShopCenter shopCenter : city.getShopCenters())
 
-                                                            if (shopCenter.get_id().equals(floor.getShopCenterId())) {
-                                                                shopCenter.addFloor(floor);
-                                                                Log.d("floor:", "floor++");
-                                                            }
-                                                    }
-                                                } else {
-                                                    // something went wrong
+                                                                                    if (shopCenter.get_id().equals(floor.getShopCenterId())) {
+                                                                                        shopCenter.addFloor(floor);
+                                                                                        Log.d("floor:", "floor++");
+                                                                                    } else {
 
 
-                                                }
-                                            }
-                                        });
-
+                                                                                    }
+                                                                            }
                                     }
                                     nextloadShops();
 
@@ -233,7 +222,8 @@ public class WelcomeActivity extends AppCompatActivity {
                                                         parseObject.getString("cityId"),
                                                         parseObject.getString("shopCenterId"),
                                                         parseObject.getString("floorId"),
-                                                        parseObject.getString("name"));
+                                                        parseObject.getString("name"),
+                                                        parseObject.getString("shopColor"));
 
 
                                                 for (City city : PARSE_DATA.getData()) {

@@ -1,27 +1,28 @@
 package devil.saleoftheday;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import foundationСlasses.City;
 import foundationСlasses.ColorTool;
 import foundationСlasses.Floor;
-import foundationСlasses.Shop;
 import foundationСlasses.ShopCenter;
 
 public class MainActivity extends Activity {
@@ -29,11 +30,18 @@ public class MainActivity extends Activity {
 
     Button city, center, floor;
 
-    City selectedCity;
-    ShopCenter selectedShopCenter;
-    Floor selectedFloor;
+    City selectedCity = new City();
+    ShopCenter selectedShopCenter = new ShopCenter();
+    Floor selectedFloor = new Floor();
+
+    private LocationManager locationManager;
 
     ImageView iv;
+    ImageView ivMask;
+
+
+    ViewGroup vg;
+
 
 
 
@@ -42,6 +50,15 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        vg = (ViewGroup) findViewById(R.id.mainLayout);
+
+
+
+
+
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         Log.d("shopCenetr:", WelcomeActivity.PARSE_DATA.getData().get(0).getShopCenters().size() + "");
         Log.d("shopCenetr:", WelcomeActivity.PARSE_DATA.getData().get(1).getShopCenters().size() + "");
@@ -52,6 +69,7 @@ public class MainActivity extends Activity {
         floor = (Button) findViewById(R.id.btnfloor);
 
         iv = (ImageView) findViewById(R.id.image);
+        ivMask = (ImageView) findViewById(R.id.image_areas);
 
 
         city.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +83,7 @@ public class MainActivity extends Activity {
                 final ArrayAdapter<String> cityArrayAdapter = new ArrayAdapter<String>(
                         MainActivity.this,
                         android.R.layout.select_dialog_singlechoice);
-                for (City city: WelcomeActivity.PARSE_DATA.getData()){
+                for (City city : WelcomeActivity.PARSE_DATA.getData()) {
                     cityArrayAdapter.add(city.getName());
                 }
 
@@ -74,7 +92,7 @@ public class MainActivity extends Activity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                center.setEnabled(true);
+
                                 city.setText(WelcomeActivity.PARSE_DATA.getData().get(which).getName());
 
                                 Log.d("name", WelcomeActivity.PARSE_DATA.getData().get(which).getName());
@@ -84,17 +102,14 @@ public class MainActivity extends Activity {
 
                                     center.setEnabled(true);
 
-                                    selectedCity = new City(
-                                            WelcomeActivity.PARSE_DATA.getData().get(which).get_id(),
-                                            WelcomeActivity.PARSE_DATA.getData().get(which).getName(),
-                                            WelcomeActivity.PARSE_DATA.getData().get(which).getCoordinates());
+                                    selectedCity.setName(WelcomeActivity.PARSE_DATA.getData().get(which).getName());
+                                    selectedCity.set_id(WelcomeActivity.PARSE_DATA.getData().get(which).get_id());
+                                    selectedCity.setCoordinates(WelcomeActivity.PARSE_DATA.getData().get(which).getCoordinates());
                                     selectedCity.setShopCenters(WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters());
-                                    //  Log.d("centers", WelcomeActivity.PARSE_DATA.getData().get(which).getShopCenters().size()+"");
-                                    Log.d("selected name:", selectedCity.getName());
-                                    Log.d("ccity center:", selectedCity.getShopCenters().size()+"");
-                                }
 
-                                else{
+                                    Log.d("selected name:", selectedCity.getName());
+                                    Log.d("ccity center:", selectedCity.getShopCenters().size() + "");
+                                } else {
                                     center.setEnabled(false);
                                     floor.setEnabled(false);
                                 }
@@ -131,33 +146,31 @@ public class MainActivity extends Activity {
 
                                 center.setText(selectedCity.getShopCenters().get(which).getName());
 
-                                if ( selectedCity.getShopCenters().get(which).getFloors().size() < 1){
+                                if (selectedCity.getShopCenters().get(which).getFloors().size() < 1) {
 
                                     floor.setEnabled(false);
-                                    selectedShopCenter = new ShopCenter(
-                                            selectedCity.getShopCenters().get(which).get_id(),
-                                            selectedCity.getShopCenters().get(which).getCityId(),
-                                            selectedCity.getShopCenters().get(which).getName(),
-                                            selectedCity.getShopCenters().get(which).getCoordinates(),
-                                            selectedCity.getShopCenters().get(which).getCenterImage());
-                                    selectedShopCenter.setFloors(selectedCity.getShopCenters().get(which).getFloors());
 
+                                    fillSelectedShopCenter(which);
+
+                                    iv.setImageBitmap(selectedShopCenter.getCenterImage());
+
+                                } else {
+                                    floor.setEnabled(true);
+                                    fillSelectedShopCenter(which);
                                     iv.setImageBitmap(selectedShopCenter.getCenterImage());
 
                                 }
 
-                                else   floor.setEnabled(true);
-                                selectedShopCenter = new ShopCenter(
-                                        selectedCity.getShopCenters().get(which).get_id(),
-                                        selectedCity.getShopCenters().get(which).getCityId(),
-                                        selectedCity.getShopCenters().get(which).getName(),
-                                        selectedCity.getShopCenters().get(which).getCoordinates(),
-                                        selectedCity.getShopCenters().get(which).getCenterImage());
+
+                            }
+
+                            private void fillSelectedShopCenter(int which) {
+                                selectedShopCenter.set_id(selectedCity.getShopCenters().get(which).get_id());
+                                selectedShopCenter.setName(selectedCity.getShopCenters().get(which).getName());
+                                selectedShopCenter.setCityId(selectedCity.getShopCenters().get(which).getCityId());
+                                selectedShopCenter.setCoordinates(selectedCity.getShopCenters().get(which).getCoordinates());
+                                selectedShopCenter.setCenterImage(selectedCity.getShopCenters().get(which).getCenterImage());
                                 selectedShopCenter.setFloors(selectedCity.getShopCenters().get(which).getFloors());
-
-                                iv.setImageBitmap(selectedShopCenter.getCenterImage());
-
-
 
 
                             }
@@ -189,24 +202,19 @@ public class MainActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
-                                selectedFloor = new Floor(
-                                        selectedShopCenter.getFloors().get(which).get_id(),
-                                        selectedShopCenter.getFloors().get(which).getName(),
-                                        selectedShopCenter.getFloors().get(which).getCityId(),
-                                        selectedShopCenter.getFloors().get(which).getShopCenterId(),
-                                        selectedShopCenter.getFloors().get(which).getFloorMapImage());
+
+                                selectedFloor.set_id(selectedShopCenter.getFloors().get(which).get_id());
+                                selectedFloor.setName(selectedShopCenter.getFloors().get(which).getName());
+                                selectedFloor.setCityId(selectedShopCenter.getFloors().get(which).getCityId());
+                                selectedFloor.setShopCenterId(selectedShopCenter.getFloors().get(which).getShopCenterId());
+                                selectedFloor.setFloorMapImage(selectedShopCenter.getFloors().get(which).getFloorMapImage());
+                                selectedFloor.setFloorMaskImage(selectedShopCenter.getFloors().get(which).getFloorMaskImage());
                                 selectedFloor.setShops(selectedShopCenter.getFloors().get(which).getShops());
 
                                 iv.setImageBitmap(selectedFloor.getFloorMapImage());
+                                ivMask.setImageBitmap(selectedFloor.getFloorMaskImage());
                                 floor.setText(selectedShopCenter.getFloors().get(which).getName());
-
-
-                                TextView textView = (TextView) findViewById(R.id.textView);
-                                String shops = "";
-                                for (Shop shop: selectedFloor.getShops()){
-                                   shops = shops + shop.getName();
-                                }
-                                textView.setText(shops);
+                                imageCrosserMethod();
 
 
                             }
@@ -218,9 +226,126 @@ public class MainActivity extends Activity {
         });
 
 
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                1000 * 10, 5, locationListener);
+        locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER, 1000 * 10, 5,
+                locationListener);
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(locationListener);
+    }
+
+    private LocationListener locationListener = new LocationListener() {
+
+        @Override
+        public void onLocationChanged(Location location) {
+
+            checkLocation(location);
+            vg.invalidate();
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+    };
+
+    private void checkLocation(Location location){
+
+        double latNow = location.getLatitude();
+        double lonNow =  location.getLongitude();
+
+
+        for (City thisCity: WelcomeActivity.PARSE_DATA.getData()){
+
+            if ((thisCity.getCoordinates().getLatMin()<= latNow)&&(latNow<=thisCity.getCoordinates().getLatMax())&&
+                    ((thisCity.getCoordinates().getLonMin()<=lonNow)&&(lonNow<=thisCity.getCoordinates().getLonMax())) ){
+
+                city.setText(thisCity.getName());
+
+                Log.d("name", thisCity.getName());
+                Log.d("shop center size ", thisCity.getShopCenters().size() + "");
+
+                if (thisCity.getShopCenters().size() > 0) {
+
+                    center.setEnabled(true);
+
+                    selectedCity.setName(thisCity.getName());
+                    selectedCity.set_id(thisCity.get_id());
+                    selectedCity.setCoordinates(thisCity.getCoordinates());
+                    selectedCity.setShopCenters(thisCity.getShopCenters());
+
+                    Log.d("selected name:", selectedCity.getName());
+                    Log.d("ccity center:", selectedCity.getShopCenters().size() + "");
+
+
+                } else {
+                    center.setEnabled(false);
+                    floor.setEnabled(false);
+                }
+
+                for (ShopCenter thisShopCenter: thisCity.getShopCenters()){
+
+                    if ((thisShopCenter.getCoordinates().getLatMin()<= latNow)&&(latNow<=thisShopCenter.getCoordinates().getLatMax())&&
+                            ((thisShopCenter.getCoordinates().getLonMin()<=lonNow)&&(lonNow<=thisShopCenter.getCoordinates().getLonMax())) ){
+
+                        center.setText(thisShopCenter.getName());
+
+                        if (thisShopCenter.getFloors().size() < 1) {
+
+                            floor.setEnabled(false);
+
+                            fillSelectedShopCenter(thisShopCenter);
+
+                            iv.setImageBitmap(selectedShopCenter.getCenterImage());
+
+                        } else {
+                            floor.setEnabled(true);
+                            fillSelectedShopCenter(thisShopCenter);
+                            iv.setImageBitmap(selectedShopCenter.getCenterImage());
+
+                        }
+                    }
+                    }
+                }
+            }
+        }
+
+    private void fillSelectedShopCenter(ShopCenter thisShopCenter) {
+        selectedShopCenter.set_id(thisShopCenter.get_id());
+        selectedShopCenter.setName(thisShopCenter.getName());
+        selectedShopCenter.setCityId(thisShopCenter.getCityId());
+        selectedShopCenter.setCoordinates(thisShopCenter.getCoordinates());
+        selectedShopCenter.setCenterImage(thisShopCenter.getCenterImage());
+        selectedShopCenter.setFloors(thisShopCenter.getFloors());
+
+    }
+
+
+
     private void imageCrosserMethod(){
 
         iv.setOnTouchListener(new View.OnTouchListener() {
@@ -261,6 +386,7 @@ public class MainActivity extends Activity {
 
                         int touchColor = getHotspotColor(R.id.image_areas, evX, evY);
 
+
                         ColorTool ct = new ColorTool();
                         int tolerance = 25;
 
@@ -278,7 +404,7 @@ public class MainActivity extends Activity {
                            // selectedFloor.getShops().get(action).getColorTouch();   */
 
 
-                        if (ct.closeMatch(Color.parseColor(selectedFloor.getShops().get(action).getColorTouch()),touchColor, tolerance)) {
+                        if (ct.closeMatch(Color.parseColor(selectedFloor.getShops().get(action).getColorTouch()), touchColor, tolerance)) {
                             //    if (ct.closeMatch(Color.parseColor(selectedFloor.getShops().get(action).getColorTouch()), touchColor, tolerance))
                             toast(selectedFloor.getShops().get(action).getName());
                         } else {
@@ -310,6 +436,7 @@ public class MainActivity extends Activity {
 
 
     }
+
     public int getHotspotColor (int hotspotId, int x, int y) {
         ImageView img = (ImageView) findViewById (hotspotId);
         if (img == null) {
@@ -333,4 +460,6 @@ public class MainActivity extends Activity {
     } // end toast
 
 
+
 }
+
