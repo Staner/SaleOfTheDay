@@ -10,16 +10,26 @@ public class Shop {
     String shopCenterId;
     String floorId;
     String name;
+    String colorTouch;
 
 
 
-    public Shop(String _id,String cityId, String shopCenterId, String floorId,  String name) {
+    public Shop(String _id,String cityId, String shopCenterId, String floorId,  String name, String colorTouch) {
         this._id = _id;
         this.cityId = cityId;
         this.shopCenterId = shopCenterId;
         this.floorId = floorId;
         this.name = name;
+        this.colorTouch = colorTouch;
 
+    }
+
+    public String getColorTouch() {
+        return colorTouch;
+    }
+
+    public void setColorTouch(String colorTouch) {
+        this.colorTouch = colorTouch;
     }
 
     public Shop() {
